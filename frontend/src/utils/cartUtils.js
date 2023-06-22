@@ -4,6 +4,7 @@ export const addDecimals = (num) => {
   return (Math.round(num * 100) / 100).toFixed(2)
 }
 
+// Update cart in local storage
 export const updateCart = (state) => {
   // Calculate item price
   state.itemsPrice = addDecimals(state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0))
@@ -18,8 +19,6 @@ export const updateCart = (state) => {
   state.totalPrice = (Number(state.itemsPrice) + Number(state.shippingPrice) + Number(state.taxPrice)).toFixed(2)
 
   localStorage.setItem("cart", JSON.stringify(state))
-
-  console.log(state)
 
   return state
 }
