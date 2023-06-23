@@ -2,14 +2,30 @@ import { Badge, Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap'
 import logo from '../assets/logo.png'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../slices/authSlice.js'
+import { useLogoutMutation } from '../slices/usersApiSlice.js';
+import { toast } from 'react-toastify';
 
 const Header = () => {
   const { userInfo } = useSelector(state => state.auth)
   const { cartItems } = useSelector(state => state.cart)
 
-  const logoutHandler = () => {
-    
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const [logoutApiCall] = useLogoutMutation()
+
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap()
+      dispatch(logout())
+      navigate('/login')
+    } catch (err) {
+      toast.error(err?.data?.message || err.error)
+    }
+
   }
 
   return (
