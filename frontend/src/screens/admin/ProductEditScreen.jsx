@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import FormContainer from '../../components/FormContainer'
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
-import { useGetProductDetailsQuery, useUpdateProductMutation } from '../../slices/productsApiSlice'
+import { useGetProductDetailsQuery, useUpdateProductMutation, useUploadProductImageMutation, useUploadProductMutation } from '../../slices/productsApiSlice'
 
 const ProductEditScreen = () => {
   const [name, setName] = useState('')
@@ -24,12 +24,29 @@ const ProductEditScreen = () => {
   const {
     data: product,
     isLoading: loadingGetProductDetails,
-    error,
+    error, 
     refetch
   } = useGetProductDetailsQuery(productId)
 
-  const [updateProduct, { isLoading: loadingUpdateProduct }] = useUpdateProductMutation()
+  const [updateProduct, { isLoading: loadingUpdateProduct }] =
+    useUpdateProductMutation()
   
+  const [uploadImage, { isLoading: loadingUploadImage }] =
+    useUploadProductImageMutation()
+
+  const uploadFileHandler = async (e) => {
+    const formData = new FormData()
+    formData.append('image', e.target.files[0])
+    console.log(e.target.files[0])
+    try {
+      const res = await uploadImage(formData).unwrap()
+      toast.success(res.message)
+      setImage(res.image)
+    } catch (err) {
+      toast.error(err?.data?.message || err.error)
+    }
+  }
+
   const submitHandler = async (e) => {
     e.preventDefault()
     const updatedProduct = {
@@ -96,7 +113,22 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            {/* Image input placeholder */}
+            <Form.Group controlId='image' className='my-2'>
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter image url'
+                value={image}
+                onChange={e => setImage}
+              ></Form.Control>
+              <Form.Control
+                type='file'
+                label='Choose file'
+                onChange={uploadFileHandler}
+              >
+
+              </Form.Control>
+            </Form.Group>
 
             <Form.Group controlId='brand' className='my-2'>
               <Form.Label>Brand</Form.Label>
