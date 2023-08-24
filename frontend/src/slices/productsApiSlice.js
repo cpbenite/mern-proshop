@@ -31,6 +31,13 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Products']    // invalidate cache -> refresh cache / fetch new data
     }),
+    deleteProduct: builder.mutation({
+      query: (productId) => ({
+        url: `${PRODUCTS_URL}/${productId}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Products']
+    }),
     uploadProductImage: builder.mutation({
       query: (data) => ({
         url: `${UPLOAD_URL}`,
@@ -45,6 +52,7 @@ export const {
   useGetProductsQuery,
   useGetProductDetailsQuery,
   useCreateProductMutation,
+  useDeleteProductMutation,
   useUpdateProductMutation,
   useUploadProductImageMutation
 } = productsApiSlice;

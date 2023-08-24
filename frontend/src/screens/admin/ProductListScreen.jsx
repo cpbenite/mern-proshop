@@ -4,7 +4,7 @@ import { FaEdit, FaTrash } from "react-icons/fa"
 import { toast } from 'react-toastify'
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
-import { useGetProductsQuery, useCreateProductMutation } from "../../slices/productsApiSlice"
+import { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation } from "../../slices/productsApiSlice"
 
 const ProductListScreen = () => {
   const { data: products, isLoading, error, refetch } = useGetProductsQuery()
@@ -22,8 +22,17 @@ const ProductListScreen = () => {
     }
   }
 
-  const deleteHandler = (id) => {
+  const [deleteProduct, { isLoading: loadingDeleteProduct }] = useDeleteProductMutation()
 
+  const deleteHandler = async (id) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await deleteProduct(id)
+        refetch()
+      } catch (err) {
+        toast.error(err?.data?.message || err.error)
+      }
+    }
   }
 
   return <>
@@ -39,6 +48,8 @@ const ProductListScreen = () => {
     </Row>
 
     {loadingCreateProduct && <Loader />}
+    {loadingDeleteProduct && <Loader />}
+
     {isLoading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
       <>
         <Table striped hover responsive className='table-sm'>
