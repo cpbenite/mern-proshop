@@ -1,6 +1,6 @@
 import { LinkContainer } from "react-router-bootstrap"
 import { Table, Button } from 'react-bootstrap'
-import { FaTrash, FaEdit, FaCheck } from "react-icons/fa"
+import { FaTimes, FaTrash, FaEdit, FaCheck } from "react-icons/fa"
 import { toast } from 'react-toastify'
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
@@ -53,7 +53,7 @@ const UserListScreen = () => {
                   {user.isAdmin ? (
                     <FaCheck style={{ color: 'green' }} />
                   ) : (
-                    <FaCheck style={{ color: 'red' }} />
+                    <FaTimes style={{ color: 'red' }} />
                   )}
                 </td>
                 <td>

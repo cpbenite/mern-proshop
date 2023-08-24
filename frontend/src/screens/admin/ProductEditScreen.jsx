@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { LinkContainer } from "react-router-bootstrap"
-import { Table, Button, Row, Col, Form } from 'react-bootstrap'
-import { FaEdit, FaTrash } from "react-icons/fa"
+import { Button, Form } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import FormContainer from '../../components/FormContainer'
 import Message from "../../components/Message"
