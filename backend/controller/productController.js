@@ -81,4 +81,111 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 })
 
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct }
+// @desc    Get product reviews
+// @route   GET /api/products/:id/reviews
+// @access  Public
+const getProductReviews = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+
+  if (product) { 
+    const reviews = product.reviews
+    res.status(200).json(reviews)
+  } else {
+    res.status(404)
+    throw new Error('Resource not found')
+  }
+})
+
+// @desc    Get a specific product review
+// @route   GET /api/products/:productId/reviews/:reviewId
+// @access  Public
+const getProductReviewById = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+
+  if (product) {
+    res.json(product)
+  } else {
+    res.status(404);
+    throw new Error('Resource not found')
+  }
+})
+
+// @desc    Create new product review
+// @route   POST /api/products/:id/reviews
+// @access  Private / Admin
+const createProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body
+
+  const product = await Product.findById(req.params.id)
+
+  if (product) { 
+    const alreadyReviewed = product.reviews.find(
+      (review) => review.user.toString() == req.user._id.toString()
+    )
+
+    if (alreadyReviewed) {
+      res.status(400)
+      throw new error('Product already reviewed')
+    }
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id
+    }
+
+    product.reviews.push(review)
+    product.numReviews = product.reviews.length
+    product.rating = 
+      product.reviews.reduce((acc, review) => acc + review.rating, 0)
+    
+    await product.save()
+    res.status(201).json({ message: 'Review added' })
+  } else {
+    res.status(404)
+    throw new Error('Resource not found')
+  }
+})
+
+// @desc    Update product review
+// @route   PUT /api/products/:id/reviews
+// @access  Private
+const updateProductReview = asyncHandler(async (req, res) => {
+  const { name, price, description, image, brand, category, countInStock } = req.body
+
+  const product = await Product.findById(req.params.id)
+  if (product) {
+    res.json({})
+  } else {
+    res.status(404)
+    throw new Error('Resource not found')
+  }
+})
+
+// @desc    Delete product review
+// @route   DELETE /api/products/:id/reviews
+// @access  Private
+const deleteProductReview = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+  if (product) {
+    await Product.deleteOne({ _id: product._id})
+    res.status(200).json({ message: 'Product deleted' })
+  } else {
+    res.status(404)
+    throw new Error('Resource not found')
+  }
+})
+
+export {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getProductReviews,
+  getProductReviewById,
+  createProductReview,
+  updateProductReview,
+  deleteProductReview
+}
