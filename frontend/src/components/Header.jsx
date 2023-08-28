@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice.js'
 import { useLogoutMutation } from '../slices/usersApiSlice.js';
 import { toast } from 'react-toastify';
+import SearchBox from './SearchBox';
 
 const Header = () => {
   const { userInfo } = useSelector(state => state.auth)
@@ -41,6 +42,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
+              <SearchBox />
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <FaShoppingCart /> Cart
