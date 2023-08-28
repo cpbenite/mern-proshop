@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import FormContainer from '../../components/FormContainer'
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
-import { useGetProductDetailsQuery, useUpdateProductMutation, useUploadProductImageMutation, useUploadProductMutation } from '../../slices/productsApiSlice'
+import { useGetProductDetailsQuery, useUpdateProductMutation, useUploadProductImageMutation } from '../../slices/productsApiSlice'
 
 const ProductEditScreen = () => {
   const [name, setName] = useState('')
@@ -22,14 +22,13 @@ const ProductEditScreen = () => {
   const {
     data: product,
     isLoading: loadingGetProductDetails,
-    error, 
-    refetch
+    error
   } = useGetProductDetailsQuery(productId)
 
   const [updateProduct, { isLoading: loadingUpdateProduct }] =
     useUpdateProductMutation()
   
-  const [uploadImage, { isLoading: loadingUploadImage }] =
+  const [uploadImage] =
     useUploadProductImageMutation()
 
   const uploadFileHandler = async (e) => {

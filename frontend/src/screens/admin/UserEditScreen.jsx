@@ -18,8 +18,7 @@ const UserEditScreen = () => {
   const {
     data: user,
     isLoading: loadingUserDetails,
-    error, 
-    refetch
+    error
   } = useGetUserDetailsQuery(userId)
 
   const [updateUser, { isLoading: loadingUpdateUser }] =
