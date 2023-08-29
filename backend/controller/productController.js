@@ -5,7 +5,7 @@ import Product from "../models/productModel.js";
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 1
+  const pageSize = process.env.PAGINATION_LIMIT || 8
   const page = Number(req.query.pageNumber) || 1
 
   const keyword = req.query.keyword
@@ -114,7 +114,7 @@ const getProductReviewById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
 
   if (product) {
-    res.json(product)
+    res.status(200).json(product)
   } else {
     res.status(404);
     throw new Error('Resource not found')
@@ -188,8 +188,23 @@ const deleteProductReview = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Get top rated products
+// @route   GET /api/products/top
+// @access  Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3)
+
+  if (products) {
+    res.status(200).json(products)
+  } else {
+    res.status(404);
+    throw new Error('Resource not found')
+  }
+})
+
 export {
   getProducts,
+  getTopProducts,
   getProductById,
   createProduct,
   updateProduct,
